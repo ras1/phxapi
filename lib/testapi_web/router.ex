@@ -19,10 +19,14 @@ defmodule TestapiWeb.Router do
     get "/", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", TestapiWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", TestapiWeb do
+    pipe_through :api
+
+    get "/notes", NoteController, :get
+    post "/notes", NoteController, :post
+
+    post "/labels", LabelController, :create
+  end
 
   # Enables LiveDashboard only for development
   #
