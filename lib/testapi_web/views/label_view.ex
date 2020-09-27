@@ -1,9 +1,11 @@
 defmodule TestapiWeb.LabelView do
     use TestapiWeb, :view
-    @attributes ~W(id name created_at inserted_at)
 
-    def render("show.json", %{data: data}) do
-        data
-        |> Map.take(@attributes)
+    def render("show.json",  %{label: label}) do
+        %{label: render_one(label, TestapiWeb.LabelView, "label.json")}
+    end
+
+    def render("label.json", %{label: label}) do
+        %{name: label.name}
     end
 end
