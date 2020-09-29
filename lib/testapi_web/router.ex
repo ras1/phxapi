@@ -21,6 +21,7 @@ defmodule TestapiWeb.Router do
 
   scope "/api", TestapiWeb do
     pipe_through :api
+    resources "/users", UserController, except: [:new, :edit]
 
     get "/notes", NoteController, :get
     post "/notes", NoteController, :post
