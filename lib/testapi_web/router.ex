@@ -25,6 +25,7 @@ defmodule TestapiWeb.Router do
     get "/notes", NoteController, :get
     post "/notes", NoteController, :post
 
+    get "/labels", LabelController, :show
     post "/labels", LabelController, :create
   end
 
