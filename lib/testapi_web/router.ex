@@ -11,6 +11,11 @@ defmodule TestapiWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+  end
+
+  pipeline :api_auth do
+    plug :ensure_authenticated
   end
 
   scope "/", TestapiWeb do
@@ -21,13 +26,18 @@ defmodule TestapiWeb.Router do
 
   scope "/api", TestapiWeb do
     pipe_through :api
-    resources "/users", UserController, except: [:new, :edit]
+    post "/users/sign_in", UserController, :sign_in
 
     get "/notes", NoteController, :get
     post "/notes", NoteController, :post
 
     get "/labels", LabelController, :show
     post "/labels", LabelController, :create
+  end
+  
+  scope "/api", TestapiWeb do
+    pipe_through [:api, :api_auth]
+    resources "/users", UserController, except: [:new, :edit]
   end
 
   # Enables LiveDashboard only for development
@@ -43,6 +53,21 @@ defmodule TestapiWeb.Router do
     scope "/" do
       pipe_through :browser
       live_dashboard "/dashboard", metrics: TestapiWeb.Telemetry
+    end
+  end
+
+  # Plug function
+  defp ensure_authenticated(conn, _opts) do
+    current_user_id = get_session(conn, :current_user_id)
+
+    if current_user_id do
+      conn
+    else
+      conn
+      |> put_status(:unauthorized)
+      |> put_view(TestapiWeb.ErrorView)
+      |> render("401.json", message: "Unauthenticated user")
+      |> halt()
     end
   end
 end
