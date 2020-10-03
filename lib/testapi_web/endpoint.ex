@@ -50,5 +50,12 @@ defmodule TestapiWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+
+  plug Corsica,
+    origins: "http://localhost:3000",
+    allow_credentials: true,
+    allow_headers: ["Content-Type"],
+    log: [rejected: :error, invalid: :warn, accepted: :debug]
+
   plug TestapiWeb.Router
 end
