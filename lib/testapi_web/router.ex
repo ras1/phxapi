@@ -27,16 +27,15 @@ defmodule TestapiWeb.Router do
   scope "/api", TestapiWeb do
     pipe_through :api
     post "/users/sign_in", UserController, :sign_in
+  end
 
+  scope "/api", TestapiWeb do
+    pipe_through [:api, :api_auth]
     get "/notes", NoteController, :get
     post "/notes", NoteController, :post
 
     get "/labels", LabelController, :show
     post "/labels", LabelController, :create
-  end
-  
-  scope "/api", TestapiWeb do
-    pipe_through [:api, :api_auth]
     resources "/users", UserController, except: [:new, :edit]
   end
 

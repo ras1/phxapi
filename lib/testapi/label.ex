@@ -9,9 +9,10 @@ defmodule Testapi.Label do
   end
 
   @doc false
-  def changeset(label, attrs) do
+  def changeset(label, params) do
     label
-    |> cast(attrs, [:name])
+    |> cast(params, [:name])
+    |> unique_constraint([:name])
     |> validate_required([:name])
   end
 end
